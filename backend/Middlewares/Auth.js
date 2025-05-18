@@ -16,5 +16,15 @@ const ensureAuthenticated = (req, res, next) => {
       .json({ message: "Unauthorized, JWT token wrong or expired" });
   }
 };
-
-module.exports = ensureAuthenticated;
+const checkUserType = (userTypes) => {
+  return (req, res, next) => {
+    console.log("Decoded user:", req.user); // Add this line
+    const userType = req.user.type;
+    console.log("User type:", userType); // Add this line
+    if (!userTypes.includes(userType)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    next();
+  };
+};
+module.exports = { ensureAuthenticated, checkUserType };

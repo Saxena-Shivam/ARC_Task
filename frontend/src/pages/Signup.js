@@ -8,6 +8,7 @@ function Signup() {
     name: "",
     email: "",
     password: "",
+    userType: "Requestor",
   });
 
   const navigate = useNavigate();
@@ -86,6 +87,17 @@ function Signup() {
             placeholder="Enter your password..."
             value={signupInfo.password}
           />
+        </div>
+        <div>
+          <label htmlFor="userType">User Type</label>
+          <select
+            onChange={handleChange}
+            name="userType"
+            value={signupInfo.userType}
+          >
+            <option value="Requestor">Requestor</option>
+            <option value="Reciever">Reciever</option>
+          </select>
         </div>
         <button type="submit">Signup</button>
         <span>

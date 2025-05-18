@@ -4,7 +4,7 @@ const UserModel = require("../Models/User");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, userType } = req.body;
     const user = await UserModel.findOne({ email });
     if (user) {
       return res.status(409).json({
@@ -12,7 +12,8 @@ const signup = async (req, res) => {
         success: false,
       });
     }
-    const userModel = new UserModel({ name, email, password });
+    const userModel = new UserModel({ name, email, password, userType });
+    userModel.userType = userType || "Requestor";
     userModel.password = await bcrypt.hash(password, 10);
     await userModel.save();
     res.status(201).json({
@@ -45,7 +46,7 @@ const login = async (req, res) => {
     }
     console.log("User", user);
     const jwtToken = jwt.sign(
-      { email: user.email, _id: user._id },
+      { email: user.email, _id: user._id, type: user.userType }, // <-- use user.userType
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "24h" }
     );
@@ -56,6 +57,8 @@ const login = async (req, res) => {
       jwtToken,
       email,
       name: user.name,
+      userType: user.userType,
+      userId: user._id,
     });
   } catch (err) {
     res.status(500).json({
