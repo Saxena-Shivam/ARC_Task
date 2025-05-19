@@ -4,7 +4,7 @@ const RequestSchema = new Schema(
   {
     requester: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User", // <-- Changed from "Users" to "User"
       required: true,
     },
     content: {
@@ -18,11 +18,11 @@ const RequestSchema = new Schema(
     },
     responder: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User", // <-- Changed from "Users" to "User"
     },
   },
   { timestamps: true }
 );
-const RequestModel = mongoose.model("requests", RequestSchema);
+const RequestModel = mongoose.model("Request", RequestSchema); // <-- Use singular
 
 module.exports = RequestModel;

@@ -9,8 +9,11 @@ exports.sendMessageByAcceptance = async (req, res) => {
     if (!acceptance || acceptance.status !== "accepted") {
       return res.status(400).json({ message: "Invalid acceptance" });
     }
+    // You may want to set sender and recipient here as well
     const newMessage = new MessageModel({
       acceptance: acceptanceId,
+      sender: req.user._id,
+      recipient: acceptance.requester, // or acceptance.responder, depending on your logic
       content,
     });
     await newMessage.save();
@@ -24,18 +27,18 @@ exports.sendMessageByAcceptance = async (req, res) => {
 exports.sendMessage = async (req, res) => {
   try {
     const senderId = req.user._id;
-    const { recipientId, message } = req.body;
+    const { recipientId, content } = req.body; // Use 'content' for clarity
 
-    if (!recipientId || !message) {
+    if (!recipientId || !content) {
       return res
         .status(400)
-        .json({ message: "Recipient and message are required" });
+        .json({ message: "Recipient and content are required" });
     }
 
     const newMessage = new MessageModel({
       sender: senderId,
       recipient: recipientId,
-      content: message,
+      content,
     });
     await newMessage.save();
 
@@ -95,30 +98,30 @@ exports.getSentMessages = async (req, res) => {
   }
 };
 
-// Reject a request (Type B only)
-exports.rejectRequest = async (req, res) => {
-  try {
-    const { requestId } = req.params;
-    const responderId = req.user._id;
+// // Reject a request (Type B only)
+// exports.rejectRequest = async (req, res) => {
+//   try {
+//     const { requestId } = req.params;
+//     const responderId = req.user._id;
 
-    const existing = await AcceptanceModel.findOne({
-      request: requestId,
-      responder: responderId,
-    });
-    if (existing) {
-      return res
-        .status(400)
-        .json({ message: "Already accepted/rejected this request" });
-    }
+//     const existing = await AcceptanceModel.findOne({
+//       request: requestId,
+//       responder: responderId,
+//     });
+//     if (existing) {
+//       return res
+//         .status(400)
+//         .json({ message: "Already accepted/rejected this request" });
+//     }
 
-    const rejection = new AcceptanceModel({
-      request: requestId,
-      responder: responderId,
-      status: "rejected",
-    });
-    await rejection.save();
-    res.status(200).json({ message: "Request rejected", rejection });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+//     const rejection = new AcceptanceModel({
+//       request: requestId,
+//       responder: responderId,
+//       status: "rejected",
+//     });
+//     await rejection.save();
+//     res.status(200).json({ message: "Request rejected", rejection });
+//   } catch (err) {
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };

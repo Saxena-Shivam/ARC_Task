@@ -125,7 +125,28 @@ function Dashboard() {
       handleError(err);
     }
   };
+  const [sentRequests, setSentRequests] = useState([]);
 
+  const fetchSentRequests = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/services/requests/sent", {
+        headers: { Authorization: localStorage.getItem("token") },
+      });
+      const data = await res.json();
+      setSentRequests(data.requests || []);
+    } catch (err) {
+      handleError(err);
+    }
+  };
+  useEffect(() => {
+    if (userType === "Requestor") {
+      fetchSentRequests();
+      fetchSentMessages();
+    } else if (userType === "Reciever") {
+      fetchPendingRequests();
+      fetchReceivedMessages();
+    }
+  }, [userType]);
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Header */}
@@ -179,7 +200,7 @@ function Dashboard() {
           {userType === "Requestor" ? (
             <>
               <h1 className="text-3xl font-bold text-gray-900 mb-8">
-                Your Sent Messages
+                Your Sent Requests
               </h1>
               <div className="mb-8">
                 <form onSubmit={handleSendRequest} className="flex gap-2">
@@ -200,19 +221,34 @@ function Dashboard() {
                 </form>
               </div>
               <ul>
-                {sentMessages.map((msg) => (
+                {sentRequests.map((req) => (
                   <li
-                    key={msg._id}
+                    key={req._id}
                     className="mb-4 p-4 bg-white rounded shadow"
                   >
                     <div>
                       <span className="font-semibold">To:</span>{" "}
-                      {msg.recipient?.name || "N/A"} (
-                      {msg.recipient?.email || "N/A"})
+                      {req.responder?.name || "Not assigned yet"} (
+                      {req.responder?.email || "N/A"})
                     </div>
                     <div>
-                      <span className="font-semibold">Message:</span>{" "}
-                      {msg.content}
+                      <span className="font-semibold">Content:</span>{" "}
+                      {req.content}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Status:</span>{" "}
+                      <span
+                        className={
+                          req.status === "accepted"
+                            ? "text-green-600 font-bold"
+                            : req.status === "rejected"
+                            ? "text-red-600 font-bold"
+                            : "text-yellow-600 font-bold"
+                        }
+                      >
+                        {req.status.charAt(0).toUpperCase() +
+                          req.status.slice(1)}
+                      </span>
                     </div>
                   </li>
                 ))}

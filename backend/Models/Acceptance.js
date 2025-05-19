@@ -4,12 +4,12 @@ const AcceptanceSchema = new Schema(
   {
     request: {
       type: Schema.Types.ObjectId,
-      ref: "requests",
+      ref: "Request",
       required: true,
     },
     responder: {
       type: Schema.Types.ObjectId,
-      ref: "users", // Matches your UserModel's collection name
+      ref: "User",
       required: true,
     },
     status: {
@@ -21,5 +21,5 @@ const AcceptanceSchema = new Schema(
   { timestamps: true }
 );
 
-const AcceptanceModel = mongoose.model("acceptances", AcceptanceSchema);
+const AcceptanceModel = mongoose.model("Acceptance", AcceptanceSchema);
 module.exports = AcceptanceModel;

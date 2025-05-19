@@ -5,13 +5,14 @@ const {
   createRequest,
   getRequests,
   acceptRequest,
+  rejectRequest,
+  getSentRequests,
 } = require("../Controllers/Request.controller");
 const {
   sendMessage,
   respondToMessage,
   getReceivedMessages,
   getSentMessages,
-  rejectRequest,
 } = require("../Controllers/Message.controller");
 
 // Type A (Requestor) Routes
@@ -20,6 +21,12 @@ router.post(
   ensureAuthenticated,
   checkUserType(["Requestor"]),
   createRequest
+);
+router.get(
+  "/requests/sent",
+  ensureAuthenticated,
+  checkUserType(["Requestor"]),
+  getSentRequests
 );
 router.post(
   "/messages",

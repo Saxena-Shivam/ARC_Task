@@ -1,11 +1,19 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const MessageSchema = new Schema(
   {
     acceptance: {
       type: Schema.Types.ObjectId,
-      ref: "acceptances",
-      required: true,
+      ref: "Acceptance", // Use the correct model name, not collection name
+    },
+    sender: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    recipient: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     content: {
       type: String,
@@ -21,13 +29,12 @@ const MessageSchema = new Schema(
     },
     expiresAt: {
       type: Date,
-      index: { expires: "1h" }, // TTL index for auto-deletion after 1 hour
+      index: { expires: "1h" },
     },
   },
   { timestamps: true }
 );
 
-// Pre-save hook to set expiresAt = now + 1 hour
 MessageSchema.pre("save", function (next) {
   if (!this.expiresAt) {
     this.expiresAt = new Date(Date.now() + 60 * 60 * 1000);
@@ -35,6 +42,4 @@ MessageSchema.pre("save", function (next) {
   next();
 });
 
-const MessageModel = mongoose.model("messages", MessageSchema);
-
-module.exports = MessageModel;
+module.exports = mongoose.model("Message", MessageSchema); // Use singular, capitalized

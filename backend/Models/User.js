@@ -25,5 +25,5 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-const UserModel = mongoose.model("users", UserSchema);
+const UserModel = mongoose.model("User", UserSchema); // <-- Use "User" (singular, capitalized)
 module.exports = UserModel;
