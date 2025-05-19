@@ -31,9 +31,12 @@ function Dashboard() {
   // Fetch pending requests for Receiver
   const fetchPendingRequests = async () => {
     try {
-      const res = await fetch("http://localhost:8080/services/requests", {
-        headers: { Authorization: localStorage.getItem("token") },
-      });
+      const res = await fetch(
+        "https://arc-task.onrender.com/services/requests",
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
       const data = await res.json();
       setPendingRequests(data.requests || []);
     } catch (err) {
@@ -44,9 +47,12 @@ function Dashboard() {
   // Fetch sent messages for Requestor
   const fetchSentMessages = async () => {
     try {
-      const res = await fetch("http://localhost:8080/services/messages/sent", {
-        headers: { Authorization: localStorage.getItem("token") },
-      });
+      const res = await fetch(
+        "https://arc-task.onrender.com/services/messages/sent",
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
       const data = await res.json();
       setSentMessages(data.sentMessages || []);
     } catch (err) {
@@ -58,7 +64,7 @@ function Dashboard() {
   const fetchReceivedMessages = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8080/services/messages/received",
+        "https://arc-task.onrender.com/services/messages/received",
         {
           headers: { Authorization: localStorage.getItem("token") },
         }
@@ -83,14 +89,17 @@ function Dashboard() {
   const handleSendRequest = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:8080/services/requests", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({ content: requestContent }),
-      });
+      const res = await fetch(
+        "https://arc-task.onrender.com/services/requests",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify({ content: requestContent }),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         handleSuccess("Request sent!");
@@ -108,7 +117,7 @@ function Dashboard() {
   const handleRequestAction = async (requestId, action) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/services/requests/${requestId}/${action}`,
+        `https://arc-task.onrender.com/services/requests/${requestId}/${action}`,
         {
           method: "POST",
           headers: { Authorization: localStorage.getItem("token") },
@@ -129,9 +138,12 @@ function Dashboard() {
 
   const fetchSentRequests = async () => {
     try {
-      const res = await fetch("http://localhost:8080/services/requests/sent", {
-        headers: { Authorization: localStorage.getItem("token") },
-      });
+      const res = await fetch(
+        "https://arc-task.onrender.com/services/requests/sent",
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
       const data = await res.json();
       setSentRequests(data.requests || []);
     } catch (err) {
