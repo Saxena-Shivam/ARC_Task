@@ -2,7 +2,8 @@ const cron = require("node-cron");
 const RequestModel = require("../Models/Request");
 const UserModel = require("../Models/User");
 const nodemailer = require("nodemailer");
-
+const dotenv = require("dotenv");
+dotenv.config();
 // Configure your transporter (Ethereal for testing)
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -10,15 +11,15 @@ const transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: "shivamsaxena562006@gmail.com",
-    pass: "kyhzinhiuweqztip",
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
 
-// Run every 1 minute (for testing, change to 5 for production)
+// Run every 5 minute
 cron.schedule("*/5 * * * *", async () => {
   console.log("Reminder job triggered at", new Date());
 
-  // 1 minute ago for testing, change to 60 * 60 * 1000 for 1 hour in production
+  // change to 60 * 60 * 1000 for 1 hour in production
   const oneMinuteAgo = new Date(Date.now() - 60 * 60 * 1000);
   try {
     // Find pending requests older than 1 minute
