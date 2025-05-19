@@ -64,7 +64,7 @@ ARC is a full-stack web application that allows users to send, receive, and mana
 1. **Clone the repository**
 
    ```sh
-   git clone https://github.com/yourusername/arc-project.git
+   git clone https://github.com/Saxena-Shivam/arc-project.git
    cd arc-project
    ```
 
