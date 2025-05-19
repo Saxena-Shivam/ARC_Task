@@ -5,6 +5,7 @@ const cors = require("cors");
 const AuthRouter = require("./Routes/AuthRouter");
 const ProductRouter = require("./Routes/ProductRouter");
 const createRequest = require("./Routes/Routes.js");
+const reminderJob = require("./jobs/reminderJob");
 require("dotenv").config();
 require("./Models/db");
 const PORT = process.env.PORT || 8080;

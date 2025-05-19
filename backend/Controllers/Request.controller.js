@@ -81,6 +81,7 @@ exports.acceptRequest = async (req, res) => {
       status: "accepted",
     });
     await acceptance.save();
+    await RequestModel.findByIdAndUpdate(requestId, { status: "accepted" });
     res.status(200).json({ message: "Request accepted", acceptance });
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
@@ -110,6 +111,7 @@ exports.rejectRequest = async (req, res) => {
       status: "rejected",
     });
     await rejection.save();
+    await RequestModel.findByIdAndUpdate(requestId, { status: "rejected" });
     res.status(200).json({ message: "Request rejected", rejection });
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });

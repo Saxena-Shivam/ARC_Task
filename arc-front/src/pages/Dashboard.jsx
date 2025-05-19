@@ -227,11 +227,6 @@ function Dashboard() {
                     className="mb-4 p-4 bg-white rounded shadow"
                   >
                     <div>
-                      <span className="font-semibold">To:</span>{" "}
-                      {req.responder?.name || "Not assigned yet"} (
-                      {req.responder?.email || "N/A"})
-                    </div>
-                    <div>
                       <span className="font-semibold">Content:</span>{" "}
                       {req.content}
                     </div>
@@ -250,6 +245,24 @@ function Dashboard() {
                           req.status.slice(1)}
                       </span>
                     </div>
+                    <div>
+                      <span className="font-semibold">By:</span>{" "}
+                      {req.responder?.name || "Not assigned yet"} (
+                      {req.responder?.email || "N/A"})
+                    </div>
+                    {/* Show Chat button only if accepted */}
+                    {req.status === "accepted" && (
+                      <button
+                        className="mt-2 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                        onClick={() => {
+                          // Open chat modal or navigate to chat page
+                          // Example: navigate(`/chat/${req._id}`);
+                          alert("Open chat for request " + req._id);
+                        }}
+                      >
+                        Chat
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -260,36 +273,38 @@ function Dashboard() {
                 Pending Requests
               </h1>
               <ul>
-                {pendingRequests.map((req) => (
-                  <li
-                    key={req._id}
-                    className="mb-4 p-4 bg-white rounded shadow"
-                  >
-                    <div>
-                      <span className="font-semibold">From:</span>{" "}
-                      {req.requester?.name || "N/A"} (
-                      {req.requester?.email || "N/A"})
-                    </div>
-                    <div>
-                      <span className="font-semibold">Content:</span>{" "}
-                      {req.content}
-                    </div>
-                    <div className="mt-2 flex gap-2">
-                      <button
-                        onClick={() => handleRequestAction(req._id, "accept")}
-                        className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => handleRequestAction(req._id, "reject")}
-                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                {pendingRequests
+                  .filter((req) => req.status === "pending")
+                  .map((req) => (
+                    <li
+                      key={req._id}
+                      className="mb-4 p-4 bg-white rounded shadow"
+                    >
+                      <div>
+                        <span className="font-semibold">From:</span>{" "}
+                        {req.requester?.name || "N/A"} (
+                        {req.requester?.email || "N/A"})
+                      </div>
+                      <div>
+                        <span className="font-semibold">Content:</span>{" "}
+                        {req.content}
+                      </div>
+                      <div className="mt-2 flex gap-2">
+                        <button
+                          onClick={() => handleRequestAction(req._id, "accept")}
+                          className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => handleRequestAction(req._id, "reject")}
+                          className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </li>
+                  ))}
               </ul>
               <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
                 Received Messages

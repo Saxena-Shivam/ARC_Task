@@ -18,7 +18,7 @@ const RequestSchema = new Schema(
     },
     responder: {
       type: Schema.Types.ObjectId,
-      ref: "User", // <-- Changed from "Users" to "User"
+      ref: "User",
     },
   },
   { timestamps: true }

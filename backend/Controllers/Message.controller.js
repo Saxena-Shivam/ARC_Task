@@ -27,18 +27,27 @@ exports.sendMessageByAcceptance = async (req, res) => {
 exports.sendMessage = async (req, res) => {
   try {
     const senderId = req.user._id;
-    const { recipientId, content } = req.body; // Use 'content' for clarity
+    const { recipientId, content, acceptanceId } = req.body;
 
-    if (!recipientId || !content) {
+    if (!recipientId || !content || !acceptanceId) {
       return res
         .status(400)
-        .json({ message: "Recipient and content are required" });
+        .json({ message: "Recipient, content, and acceptanceId are required" });
+    }
+
+    // Check if acceptance exists and is accepted
+    const acceptance = await AcceptanceModel.findById(acceptanceId);
+    if (!acceptance || acceptance.status !== "accepted") {
+      return res
+        .status(403)
+        .json({ message: "Chat not enabled until request is accepted." });
     }
 
     const newMessage = new MessageModel({
       sender: senderId,
       recipient: recipientId,
       content,
+      acceptance: acceptanceId,
     });
     await newMessage.save();
 
