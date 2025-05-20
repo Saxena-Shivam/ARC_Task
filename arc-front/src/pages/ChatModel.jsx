@@ -27,7 +27,6 @@ function ChatModal({ acceptanceId, recipientId, onClose }) {
   useEffect(() => {
     fetchMessages();
     // Optionally, poll for new messages every 10 seconds
-
     const interval = setInterval(fetchMessages, 10000);
     return () => clearInterval(interval);
   }, [acceptanceId]);
@@ -60,6 +59,12 @@ function ChatModal({ acceptanceId, recipientId, onClose }) {
     setSending(false);
   };
 
+  // Filter messages to only show those from the last 1 hour
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const recentMessages = messages.filter(
+    (msg) => new Date(msg.createdAt) >= oneHourAgo
+  );
+
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col h-[80vh] my-8">
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-4 flex justify-between items-center rounded-t-2xl">
@@ -90,12 +95,12 @@ function ChatModal({ acceptanceId, recipientId, onClose }) {
           <div className="flex justify-center items-center h-full">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
           </div>
-        ) : messages.length === 0 ? (
+        ) : recentMessages.length === 0 ? (
           <div className="text-center text-gray-500 py-8">
             Start the conversation...
           </div>
         ) : (
-          messages.map((msg) => (
+          recentMessages.map((msg) => (
             <div
               key={msg._id}
               className={`flex ${

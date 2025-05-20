@@ -144,7 +144,7 @@ function Signup() {
                   value={signupInfo.userType}
                 >
                   <option value="Requestor">Requestor</option>
-                  <option value="Receiver">Receiver</option>
+                  <option value="Reciever">Receiver</option>
                 </select>
               </div>
 
