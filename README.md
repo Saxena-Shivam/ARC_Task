@@ -1,8 +1,8 @@
-﻿# ARC Project
+﻿# UniCom Project
 
 ## Overview
 
-ARC is a full-stack web application that allows users to send, receive, and manage requests between two user types: **Requestor** and **Reciever**. The system includes authentication, request management, status tracking, and automated email reminders for pending requests.
+UniCom is a full-stack web application that allows users to send, receive, and manage requests between two user types: **Requestor** and **Reciever**. The system includes authentication, request management, status tracking, and automated email reminders for pending requests.
 
 ---
 
