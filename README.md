@@ -129,7 +129,7 @@ arc-project/
 
 ## Deployment
 
-- **Frontend**: Can be deployed on Vercel (see `vercer.json` for rewrite rules).
+- **Frontend**: Can be deployed on Vercel (see `vercel.json` for rewrite rules).
 - **Backend**: Deploy on any Node.js-compatible server (Heroku, Render, etc.).
 
 ---
