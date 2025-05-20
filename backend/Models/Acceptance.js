@@ -1,10 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const AcceptanceSchema = new Schema(
   {
     request: {
       type: Schema.Types.ObjectId,
       ref: "Request",
+      required: true,
+    },
+    requester: {
+      // <-- Add this field
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     responder: {

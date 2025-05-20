@@ -75,8 +75,10 @@ exports.acceptRequest = async (req, res) => {
         .json({ message: "Already accepted/rejected this request" });
     }
 
+    const request = await RequestModel.findById(requestId);
     const acceptance = new AcceptanceModel({
       request: requestId,
+      requester: request.requester, // <-- set this to the user who made the request
       responder: responderId,
       status: "accepted",
     });
@@ -132,13 +134,14 @@ exports.getSentRequests = async (req, res) => {
           ...req,
           status: acceptance ? acceptance.status : "pending",
           responder: acceptance ? acceptance.responder : null,
+          acceptance: acceptance ? { _id: acceptance._id } : null, // <-- add this
         };
       })
     );
 
     res.status(200).json({ requests: requestsWithStatus });
   } catch (err) {
-    console.error("Error in getSentRequests:", err); // Add this for debugging
+    console.error("Error in getSentRequests:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

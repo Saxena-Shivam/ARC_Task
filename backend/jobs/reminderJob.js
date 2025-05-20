@@ -4,58 +4,80 @@ const UserModel = require("../Models/User");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
-// Configure your transporter (Ethereal for testing)
+
+// Configure transporter with proper validation
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  port: 465,
-  secure: true,
   auth: {
     user: "shivamsaxena562006@gmail.com",
     pass: process.env.GMAIL_PASSWORD,
   },
+  secure: true, // Use SSL
+  tls: {
+    rejectUnauthorized: true, // Important for production
+  },
 });
 
-// Run every 5 minute
-cron.schedule("*/5 * * * *", async () => {
-  console.log("Reminder job triggered at", new Date());
+// Validate Date creation
+function getPastDate(minutesAgo) {
+  const date = new Date(Date.now() - minutesAgo * 60 * 1000);
+  if (isNaN(date)) throw new Error("Invalid date calculation");
+  return date;
+}
 
-  // change to 60 * 60 * 1000 for 1 hour in production
-  const oneMinuteAgo = new Date(Date.now() - 60 * 60 * 1000);
-  try {
-    // Find pending requests older than 1 minute
-    const pendingRequests = await RequestModel.find({
-      status: "pending",
-      createdAt: { $lte: oneMinuteAgo },
-    }).populate("requester");
+// Modified cron job with error handling
+function scheduleReminders() {
+  cron.schedule(
+    "*/5 * * * *",
+    async () => {
+      console.log("Reminder job triggered at", new Date().toISOString());
 
-    console.log("Found", pendingRequests.length, "pending requests");
+      try {
+        const oneHourAgo = getPastDate(60); // 60 minutes = 1 hour
 
-    if (pendingRequests.length === 0) return;
+        const pendingRequests = await RequestModel.find({
+          status: "pending",
+          createdAt: { $lte: oneHourAgo },
+        }).populate("requester");
 
-    // Get all receivers
-    const receivers = await UserModel.find({ userType: "Reciever" });
-    console.log("Receivers found:", receivers.length);
+        console.log("Found", pendingRequests.length, "pending requests");
+        if (pendingRequests.length === 0) return;
 
-    for (const receiver of receivers) {
-      if (!receiver.email) continue;
+        const receivers = await UserModel.find({ userType: "Receiver" }); // Fixed spelling
+        console.log("Receivers found:", receivers.length);
 
-      // You can customize the email content as needed
-      const emailText = `
-        There are pending requests in ARC that need your attention.
-        Please log in to your ARC dashboard to accept or reject requests.
-      `;
+        for (const receiver of receivers) {
+          if (!receiver.email) continue;
 
-      console.log(`Sending reminder to receiver: ${receiver.email}`);
-      await transporter.sendMail({
-        from: '"ARC" <jackson.mills@ethereal.email>',
-        to: receiver.email,
-        subject: "Reminder: Pending Requests",
-        text: emailText,
-      });
-
-      console.log(`Reminder sent to receiver: ${receiver.email}`);
+          try {
+            await transporter.sendMail({
+              from: '"ARC Support" <shivamsaxena562006@gmail.com>',
+              to: receiver.email,
+              subject: "Reminder: Pending Requests",
+              text: `There are ${pendingRequests.length} pending requests in ARC that need your attention. Please log in to your dashboard to review them.`,
+              html: `<p>There are <strong>${pendingRequests.length}</strong> pending requests in ARC that need your attention.</p>
+                   <p>Please log in to your dashboard to review them.</p>`,
+            });
+            console.log(`Reminder sent to ${receiver.email}`);
+          } catch (emailError) {
+            console.error(`Failed to send to ${receiver.email}:`, emailError);
+          }
+        }
+      } catch (err) {
+        console.error("Reminder job failed:", err);
+      }
+    },
+    {
+      scheduled: true,
+      timezone: "Asia/Kolkata", // Set appropriate timezone
     }
-  } catch (err) {
-    console.error("Error sending reminders:", err);
-  }
-});
+  );
+}
+
+// Start the scheduler with validation
+try {
+  scheduleReminders();
+  console.log("Cron job scheduled successfully");
+} catch (cronError) {
+  console.error("Failed to schedule cron job:", cronError);
+}

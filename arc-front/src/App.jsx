@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import DashBoard from "./pages/Dashboard";
 import { useState } from "react";
 import RefrshHandler from "./RefrshHandler";
-
+import ChatPage from "./pages/ChatPage";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -24,6 +24,10 @@ function App() {
         <Route
           path="/dashboard"
           element={<PrivateRoute element={<DashBoard />} />}
+        />
+        <Route
+          path="/chat/:acceptanceId"
+          element={<PrivateRoute element={<ChatPage />} />}
         />
       </Routes>
     </div>

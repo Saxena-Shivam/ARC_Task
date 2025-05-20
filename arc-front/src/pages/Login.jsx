@@ -79,13 +79,16 @@ function Login() {
   //   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Simplified Header */}
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-blue-700 to-purple-700 shadow-lg">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-16 flex items-center">
-            <Link to="/" className="text-2xl font-bold text-indigo-600">
-              ARC
+            <Link
+              to="/"
+              className="text-3xl font-extrabold text-white tracking-wide drop-shadow-lg"
+            >
+              UniCom
             </Link>
           </div>
         </nav>
@@ -94,15 +97,15 @@ function Login() {
       {/* Main Content */}
       <main className="flex-grow">
         <div className="max-w-md mx-auto py-12 px-4 sm:px-0">
-          <div className="bg-white shadow-xl rounded-lg p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
               Welcome Back
             </h1>
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-600 mb-2"
                 >
                   Email
                 </label>
@@ -110,7 +113,7 @@ function Login() {
                   onChange={handleChange}
                   type="email"
                   name="email"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
                   placeholder="john@example.com"
                   value={loginInfo.email}
                 />
@@ -119,7 +122,7 @@ function Login() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-600 mb-2"
                 >
                   Password
                 </label>
@@ -127,7 +130,7 @@ function Login() {
                   onChange={handleChange}
                   type="password"
                   name="password"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
                   placeholder="••••••••"
                   value={loginInfo.password}
                 />
@@ -135,7 +138,7 @@ function Login() {
 
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transition-all cursor-pointer"
               >
                 Sign In
               </button>
@@ -144,7 +147,7 @@ function Login() {
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="font-medium text-blue-600 hover:text-purple-600 transition-colors"
                 >
                   Create account
                 </Link>
@@ -155,10 +158,10 @@ function Login() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 mt-8">
+      <footer className="bg-gradient-to-r from-blue-700 to-purple-700 text-white py-8 mt-12 rounded-t-3xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm">
-            &copy; {new Date().getFullYear()} ARC. All rights reserved.
+          <p className="text-sm opacity-90">
+            &copy; {new Date().getFullYear()} UniCom. All rights reserved.
           </p>
         </div>
       </footer>

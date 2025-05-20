@@ -53,14 +53,18 @@ function Signup() {
       handleError(err);
     }
   };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-gradient-to-r from-blue-700 to-purple-700 shadow-lg">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-16 flex items-center">
-            <Link to="/" className="text-2xl font-bold text-indigo-600">
-              ARC
+            <Link
+              to="/"
+              className="text-3xl font-extrabold text-white tracking-wide drop-shadow-lg"
+            >
+              UniCom
             </Link>
           </div>
         </nav>
@@ -68,16 +72,16 @@ function Signup() {
 
       {/* Main Content */}
       <main className="flex-grow">
-        <div className="max-w-md mx-auto py-12 px-4 sm:px-0">
-          <div className="bg-white shadow-xl rounded-lg p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        <div className="max-w-md mx-auto py-8 px-4 sm:px-0">
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-xl p-6 hover:shadow-xl transition-shadow">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
               Create New Account
             </h1>
-            <form onSubmit={handleSignup} className="space-y-6">
+            <form onSubmit={handleSignup} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-600 mb-1"
                 >
                   Name
                 </label>
@@ -86,7 +90,7 @@ function Signup() {
                   type="text"
                   name="name"
                   autoFocus
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                   placeholder="John Doe"
                   value={signupInfo.name}
                 />
@@ -95,7 +99,7 @@ function Signup() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-600 mb-1"
                 >
                   Email
                 </label>
@@ -103,7 +107,7 @@ function Signup() {
                   onChange={handleChange}
                   type="email"
                   name="email"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                   placeholder="john@example.com"
                   value={signupInfo.email}
                 />
@@ -112,7 +116,7 @@ function Signup() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-600 mb-1"
                 >
                   Password
                 </label>
@@ -120,7 +124,7 @@ function Signup() {
                   onChange={handleChange}
                   type="password"
                   name="password"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                   placeholder="••••••••"
                   value={signupInfo.password}
                 />
@@ -129,33 +133,33 @@ function Signup() {
               <div>
                 <label
                   htmlFor="userType"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-600 mb-1"
                 >
                   User Type
                 </label>
                 <select
                   onChange={handleChange}
                   name="userType"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={signupInfo.userType}
                 >
                   <option value="Requestor">Requestor</option>
-                  <option value="Reciever">Reciever</option>
+                  <option value="Receiver">Receiver</option>
                 </select>
               </div>
 
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all"
               >
                 Create Account
               </button>
 
-              <div className="text-center text-sm text-gray-600">
+              <div className="text-center text-sm text-gray-600 mt-4">
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="font-medium text-blue-600 hover:text-purple-600 transition-colors"
                 >
                   Login here
                 </Link>
@@ -166,10 +170,10 @@ function Signup() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 mt-8">
+      <footer className="bg-gradient-to-r from-blue-700 to-purple-700 text-white py-6 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm">
-            &copy; {new Date().getFullYear()} ARC. All rights reserved.
+          <p className="text-xs opacity-90">
+            &copy; {new Date().getFullYear()} UniCom. All rights reserved.
           </p>
         </div>
       </footer>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
-
+// import ChatModal from "./ChatModel";
 function Dashboard() {
   const [loggedInUser, setLoggedInUser] = useState("");
   const [userType, setUserType] = useState("");
@@ -12,6 +12,8 @@ function Dashboard() {
   const [requestContent, setRequestContent] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  // const [chatAcceptanceId, setChatAcceptanceId] = useState(null);
+  // const [chatRecipientId, setChatRecipientId] = useState(null);
   console.log("userType", userType);
   useEffect(() => {
     setLoggedInUser(localStorage.getItem("loggedInUser"));
@@ -32,6 +34,7 @@ function Dashboard() {
   const fetchPendingRequests = async () => {
     try {
       const res = await fetch(
+        // "https://arc-task.onrender.com/services/requests",
         "https://arc-task.onrender.com/services/requests",
         {
           headers: { Authorization: localStorage.getItem("token") },
@@ -62,18 +65,14 @@ function Dashboard() {
 
   // Fetch received messages for Receiver
   const fetchReceivedMessages = async () => {
-    try {
-      const res = await fetch(
-        "https://arc-task.onrender.com/services/messages/received",
-        {
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-      const data = await res.json();
-      setReceivedMessages(data.receivedMessages || []);
-    } catch (err) {
-      handleError(err);
-    }
+    const res = await fetch(
+      "https://arc-task.onrender.com/services/messages/received",
+      {
+        headers: { Authorization: localStorage.getItem("token") },
+      }
+    );
+    const data = await res.json();
+    setReceivedMessages(data.messages || []);
   };
 
   useEffect(() => {
@@ -160,25 +159,25 @@ function Dashboard() {
     }
   }, [userType]);
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-gradient-to-r from-blue-700 to-purple-700 shadow-lg">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <span className="text-2xl font-bold text-indigo-600">ARC</span>
+              <span className="text-2xl font-bold text-white">UniCom</span>
               <div className="ml-10">
-                <span className="text-gray-700">Welcome, {loggedInUser}</span>
+                <span className="text-gray-200">Welcome, {loggedInUser}</span>
               </div>
             </div>
             {/* Profile Dropdown */}
             <div className="relative ml-3">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300"
+                className="flex text-sm rounded-full focus:outline-none transition-transform hover:scale-110"
               >
                 <svg
-                  className="h-8 w-8 text-gray-400"
+                  className="h-8 w-8 text-gray-200 hover:text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -192,10 +191,10 @@ function Dashboard() {
                 </svg>
               </button>
               {isDropdownOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
+                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-xl py-1 bg-white backdrop-blur-sm bg-opacity-90">
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                   >
                     Logout
                   </button>
@@ -211,144 +210,176 @@ function Dashboard() {
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {userType === "Requestor" ? (
             <>
-              <h1 className="text-3xl font-bold text-gray-900 mb-8">
+              <h1 className="text-3xl font-bold text-gray-800 mb-8">
                 Your Sent Requests
               </h1>
               <div className="mb-8">
-                <form onSubmit={handleSendRequest} className="flex gap-2">
+                <form onSubmit={handleSendRequest} className="flex gap-4">
                   <input
                     type="text"
                     value={requestContent}
                     onChange={(e) => setRequestContent(e.target.value)}
-                    placeholder="Enter your request"
-                    className="border px-4 py-2 rounded w-full"
+                    placeholder="Enter your request..."
+                    className="border-2 border-gray-200 px-6 py-3 rounded-xl w-full focus:outline-none focus:border-blue-500 placeholder-gray-400 transition-colors"
                     required
                   />
                   <button
                     type="submit"
-                    className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700"
+                    className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition-all cursor-pointer shadow-lg hover:shadow-xl"
                   >
                     Send Request
                   </button>
                 </form>
               </div>
-              <ul>
+              <ul className="space-y-4">
                 {sentRequests.map((req) => (
                   <li
                     key={req._id}
-                    className="mb-4 p-4 bg-white rounded shadow"
+                    className="p-6 bg-white bg-opacity-90 rounded-2xl shadow-md hover:shadow-lg transition-shadow backdrop-blur-sm"
                   >
-                    <div>
-                      <span className="font-semibold">Content:</span>{" "}
-                      {req.content}
+                    <div className="space-y-2">
+                      <p className="text-gray-700">
+                        <span className="font-semibold text-blue-600">
+                          Content:
+                        </span>{" "}
+                        {req.content}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-purple-600">
+                          Status:
+                        </span>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            req.status === "accepted"
+                              ? "bg-green-100 text-green-800"
+                              : req.status === "rejected"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {req.status.charAt(0).toUpperCase() +
+                            req.status.slice(1)}
+                        </span>
+                      </div>
+                      <p className="text-gray-600">
+                        <span className="font-semibold">By:</span>{" "}
+                        {req.responder?.name || "Not assigned yet"}
+                      </p>
+                      {req.status === "accepted" && req.acceptance && (
+                        <button
+                          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all cursor-pointer shadow-md hover:shadow-lg"
+                          onClick={() => {
+                            navigate(`/chat/${req.acceptance._id}`, {
+                              state: { recipientId: req.responder?._id },
+                            });
+                          }}
+                        >
+                          Open Chat
+                        </button>
+                      )}
                     </div>
-                    <div>
-                      <span className="font-semibold">Status:</span>{" "}
-                      <span
-                        className={
-                          req.status === "accepted"
-                            ? "text-green-600 font-bold"
-                            : req.status === "rejected"
-                            ? "text-red-600 font-bold"
-                            : "text-yellow-600 font-bold"
-                        }
-                      >
-                        {req.status.charAt(0).toUpperCase() +
-                          req.status.slice(1)}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold">By:</span>{" "}
-                      {req.responder?.name || "Not assigned yet"} (
-                      {req.responder?.email || "N/A"})
-                    </div>
-                    {/* Show Chat button only if accepted */}
-                    {req.status === "accepted" && (
-                      <button
-                        className="mt-2 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                        onClick={() => {
-                          // Open chat modal or navigate to chat page
-                          // Example: navigate(`/chat/${req._id}`);
-                          alert("Open chat for request " + req._id);
-                        }}
-                      >
-                        Chat
-                      </button>
-                    )}
                   </li>
                 ))}
               </ul>
             </>
           ) : userType === "Reciever" ? (
             <>
-              <h1 className="text-3xl font-bold text-gray-900 mb-8">
+              <h1 className="text-3xl font-bold text-gray-800 mb-8">
                 Pending Requests
               </h1>
-              <ul>
+              <ul className="space-y-6">
                 {pendingRequests
                   .filter((req) => req.status === "pending")
                   .map((req) => (
                     <li
                       key={req._id}
-                      className="mb-4 p-4 bg-white rounded shadow"
+                      className="p-6 bg-white bg-opacity-90 rounded-2xl shadow-md hover:shadow-lg transition-shadow backdrop-blur-sm"
                     >
-                      <div>
-                        <span className="font-semibold">From:</span>{" "}
-                        {req.requester?.name || "N/A"} (
-                        {req.requester?.email || "N/A"})
-                      </div>
-                      <div>
-                        <span className="font-semibold">Content:</span>{" "}
-                        {req.content}
-                      </div>
-                      <div className="mt-2 flex gap-2">
-                        <button
-                          onClick={() => handleRequestAction(req._id, "accept")}
-                          className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
-                        >
-                          Accept
-                        </button>
-                        <button
-                          onClick={() => handleRequestAction(req._id, "reject")}
-                          className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                        >
-                          Reject
-                        </button>
+                      <div className="space-y-3">
+                        <p className="text-gray-700">
+                          <span className="font-semibold text-blue-600">
+                            From:
+                          </span>{" "}
+                          {req.requester?.name}
+                        </p>
+                        <p className="text-gray-700">
+                          <span className="font-semibold text-purple-600">
+                            Content:
+                          </span>{" "}
+                          {req.content}
+                        </p>
+                        <div className="flex gap-4 mt-4">
+                          <button
+                            onClick={() =>
+                              handleRequestAction(req._id, "accept")
+                            }
+                            className="bg-green-500 text-white px-6 py-2 rounded-xl hover:bg-green-600 transition-all cursor-pointer shadow-md hover:shadow-lg"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleRequestAction(req._id, "reject")
+                            }
+                            className="bg-red-500 text-white px-6 py-2 rounded-xl hover:bg-red-600 transition-all cursor-pointer shadow-md hover:shadow-lg"
+                          >
+                            Reject
+                          </button>
+                        </div>
                       </div>
                     </li>
                   ))}
               </ul>
-              <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
+
+              <h2 className="text-2xl font-bold text-gray-800 mt-12 mb-6">
                 Received Messages
               </h2>
-              <ul>
+              <ul className="space-y-4">
                 {receivedMessages.map((msg) => (
                   <li
                     key={msg._id}
-                    className="mb-4 p-4 bg-white rounded shadow"
+                    className="p-6 bg-white bg-opacity-90 rounded-2xl shadow-md hover:shadow-lg transition-shadow backdrop-blur-sm"
                   >
-                    <div>
-                      <span className="font-semibold">From:</span>{" "}
-                      {msg.sender?.name || "N/A"} ({msg.sender?.email || "N/A"})
-                    </div>
-                    <div>
-                      <span className="font-semibold">Message:</span>{" "}
-                      {msg.content}
+                    <div className="space-y-2">
+                      <p className="text-gray-700">
+                        <span className="font-semibold text-blue-600">
+                          From:
+                        </span>{" "}
+                        {msg.sender?.name}
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-semibold text-purple-600">
+                          Message:
+                        </span>{" "}
+                        {msg.content}
+                      </p>
+                      {msg.acceptance && (
+                        <button
+                          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all cursor-pointer shadow-md hover:shadow-lg"
+                          onClick={() => {
+                            navigate(`/chat/${msg.acceptance}`, {
+                              state: { recipientId: msg.sender?._id },
+                            });
+                          }}
+                        >
+                          Reply
+                        </button>
+                      )}
                     </div>
                   </li>
                 ))}
               </ul>
             </>
           ) : (
-            <div>Loading...{userType}</div>
+            <div className="text-center text-gray-600">Loading...</div>
           )}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 mt-8">
+      <footer className="bg-gradient-to-r from-blue-700 to-purple-700 text-white py-8 mt-12 rounded-t-3xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm">
+          <p className="text-sm opacity-90">
             &copy; {new Date().getFullYear()} ARC. All rights reserved.
           </p>
         </div>
