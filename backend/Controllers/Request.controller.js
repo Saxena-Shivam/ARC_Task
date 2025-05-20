@@ -107,8 +107,11 @@ exports.rejectRequest = async (req, res) => {
         .json({ message: "Already accepted/rejected this request" });
     }
 
+    // Fetch the request to get the requester
+    const request = await RequestModel.findById(requestId);
     const rejection = new AcceptanceModel({
       request: requestId,
+      requester: request.requester, // <-- Add this line
       responder: responderId,
       status: "rejected",
     });
