@@ -43,7 +43,7 @@ function scheduleReminders() {
         console.log("Found", pendingRequests.length, "pending requests");
         if (pendingRequests.length === 0) return;
 
-        const receivers = await UserModel.find({ userType: "Receiver" }); // Fixed spelling
+        const receivers = await UserModel.find({ userType: "Reciever" }); // Fixed spelling
         console.log("Receivers found:", receivers.length);
 
         for (const receiver of receivers) {
